@@ -1,4 +1,7 @@
-const API_BASE_URL = 'http://localhost:3000/api/auth';
+const API_BASE_URL = 'https://blogger-backend-production-219f.up.railway.app/api/auth';
+
+
+
 
 export async function signupUser(email, password) {
   try {
