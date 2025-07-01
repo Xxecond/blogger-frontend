@@ -8,11 +8,12 @@ function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch('http://localhost:3000/api/auth/forgot-password', {
+    fetch('https://blogger-backend-production-219f.up.railway.app/api/auth/forgot-password', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ email }),
 });
+
 
 
     const data = await res.json();
