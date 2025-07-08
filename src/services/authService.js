@@ -1,8 +1,4 @@
 const API_BASE_URL = 'https://blogger-backend-production-219f.up.railway.app/api/auth';
-
-
-
-
 export async function signupUser(email, password) {
   try {
     const response = await fetch(`${API_BASE_URL}/signup`, {

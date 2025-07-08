@@ -42,7 +42,8 @@ function Signup() {
   };
 
   return (
-    <div className="wrapper">
+      <div className="auth-page">
+<div className="wrapper">
       <form onSubmit={handleSignup}>
         <h2>Create an Account</h2>
 
@@ -92,6 +93,7 @@ function Signup() {
 
         {message && <p className="error">{message}</p>}
       </form>
+    </div>
     </div>
   );
 }

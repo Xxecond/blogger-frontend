@@ -36,6 +36,7 @@ function Login() {
   };
 
   return (
+    <div className="auth-page">
     <div className="wrapper">
       <form onSubmit={handleLogin}>
         <h2>Login</h2>
@@ -87,6 +88,7 @@ function Login() {
 
         {message && <p className="error">{message}</p>}
       </form>
+      </div>
     </div>
   );
 }

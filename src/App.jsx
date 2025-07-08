@@ -43,7 +43,7 @@ function App() {
             </>
           )}
 
-          <div className="main-content">
+
             <Routes>
               {/* Default to login */}
               <Route path="/" element={<Navigate to="/login" />} />
@@ -61,7 +61,7 @@ function App() {
               <Route path="/edit/:id" element={<EditBlog />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </div>
+          
         </>
       )}
     </>
