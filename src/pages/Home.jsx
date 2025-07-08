@@ -35,7 +35,7 @@ function Home() {
         )
       ) : (
         <div className="blogdirect">
-          <Link to="create">CREATE NEW BLOG</Link>
+          <Link to="/create">CREATE NEW BLOG</Link>
         </div>
       )}
     </div>

@@ -165,7 +165,7 @@ transition:transform 0.3s ease;
 .logout{
   position:relative;
   width:100%;
-  top:42rem;
+  top:40rem;
   z-index:1;
 }
 
@@ -611,6 +611,7 @@ p {
   .image-upload {
     width: 95%;
   }
+
   
 }
 
