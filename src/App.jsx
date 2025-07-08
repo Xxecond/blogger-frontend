@@ -1,5 +1,6 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+
 import Navbar from './components/Navbar';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -18,7 +19,11 @@ import ForgotPassword from './pages/ForgotPassword';
 function App() {
   const [showSplash, setShowSplash] = useState(true);
   const location = useLocation();
+  const navigate = useNavigate();
 
+  const hideNavRoutes = ['/login', '/signup'];
+
+  // Splash display logic
   useEffect(() => {
     if (location.pathname === '/') {
       const timer = setTimeout(() => setShowSplash(false), 3500);
@@ -28,7 +33,29 @@ function App() {
     }
   }, [location]);
 
-  const hideNavRoutes = ['/login', '/signup'];
+  // Redirect to /login after splash screen ends
+  useEffect(() => {
+    if (!showSplash && location.pathname === '/') {
+      navigate('/login');
+    }
+  }, [showSplash, location, navigate]);
+
+  const routes = (
+    <Routes>
+      {/* Auth routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+
+      {/* App routes */}
+      <Route path="/home" element={<Home />} />
+      <Route path="/create" element={<CreateBlog />} />
+      <Route path="/about" element={<><About /><Footer /></>} />
+      <Route path="/blog/:id" element={<BlogDetails />} />
+      <Route path="/edit/:id" element={<EditBlog />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
 
   return (
     <>
@@ -43,25 +70,13 @@ function App() {
             </>
           )}
 
-                <div className="main-content">
-            <Routes>
-              {/* Default to login */}
-              <Route path="/" element={<Navigate to="/login" />} />
-
-              {/* Auth pages */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-
-              {/* Main App Routes */}
-              <Route path="/home" element={<Home />} />
-              <Route path="/create" element={<CreateBlog />} />
-              <Route path="/about" element={<><About /><Footer /></>} />
-              <Route path="/blog/:id" element={<BlogDetails />} />
-              <Route path="/edit/:id" element={<EditBlog />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
+          {!hideNavRoutes.includes(location.pathname) ? (
+            <div className="main-content">
+              {routes}
+            </div>
+          ) : (
+            routes
+          )}
         </>
       )}
     </>

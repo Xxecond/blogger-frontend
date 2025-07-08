@@ -163,9 +163,9 @@ transition:transform 0.3s ease;
 }
 
 .logout{
-  position:absolute;
+  position:relative;
   width:100%;
-  top:60rem;
+  top:42rem;
   z-index:1;
 }
 
@@ -562,7 +562,7 @@ p {
 
 .version{
   position:relative;
-  padding-top:51rem;
+  padding-top:44rem;
   text-align: center;
   color:white;
   font-size: 1.4rem;
