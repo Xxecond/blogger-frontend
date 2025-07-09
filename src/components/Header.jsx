@@ -6,7 +6,7 @@ function Header() {
   const location = useLocation();
 
   const headings = {
-    '/': 'FOOTBALL INSIDER ',
+    '/home': 'FOOTBALL INSIDER ',
     '/create': 'New Blog',
     '/edit':'Edit Blog',
     '/about':'About'

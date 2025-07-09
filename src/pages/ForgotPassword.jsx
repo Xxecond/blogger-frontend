@@ -1,5 +1,4 @@
-// src/pages/ForgotPassword.js
-import { useState } from 'react';
+ import { useState } from 'react';
 
 function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -8,16 +7,21 @@ function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    fetch('https://blogger-backend-production-219f.up.railway.app/api/auth/forgot-password', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email }),
-});
+    try {
+      const res = await fetch(
+        'https://blogger-backend-production-219f.up.railway.app/api/auth/forgot-password',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        }
+      );
 
-
-
-    const data = await res.json();
-    setMessage(data.message);
+      const data = await res.json();
+      setMessage(data.message);
+    } catch (error) {
+      setMessage('Something went wrong. Please try again.');
+    }
   };
 
   return (
