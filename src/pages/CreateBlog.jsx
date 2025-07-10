@@ -29,7 +29,7 @@ function CreateBlog() {
     };
     blogs.push(newBlog);
     localStorage.setItem("blogs", JSON.stringify(blogs));
-    navigate('/');
+    navigate('/home');
   };
 
   return (
