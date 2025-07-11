@@ -15,6 +15,7 @@ import Splash from './pages/splash';
 import Login from './pages/login';
 import Signup from './pages/signup';
 import ForgotPassword from './pages/ForgotPassword';
+import VerifyEmail from './pages/VerifyEmail';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -46,7 +47,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-
+      <Route path="/verify-email" element={<VerifyEmail />} />
+  
       {/* App routes */}
       <Route path="/home" element={<Home />} />
       <Route path="/create" element={<CreateBlog />} />
