@@ -4,7 +4,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 function VerifyEmail() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('Verifying email...');
   const [verifying, setVerifying] = useState(true);
 
   const token = searchParams.get('token');
@@ -12,13 +12,13 @@ function VerifyEmail() {
   useEffect(() => {
     const verifyEmail = async () => {
       if (!token) {
-        setStatus('No token found');
+        setStatus('No token found in URL.');
         setVerifying(false);
         return;
       }
 
       try {
-        const res = await fetch('https://blogger-backend-production-219f.up.railway.app/api/auth/verify-email', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/verify-email`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token }),
@@ -27,18 +27,16 @@ function VerifyEmail() {
         const data = await res.json();
 
         if (res.ok) {
-          setStatus(data.message);
-          setTimeout(() => {
-            navigate('/home?verified=true'); // ✅ redirect with query param
-          }, 2000);
+          setStatus('✅ Email verified successfully!');
+          setTimeout(() => navigate('/login?verified=true'), 2000);
         } else {
-          setStatus(data.message || 'Verification failed');
+          setStatus(data.message || '❌ Verification failed.');
         }
       } catch (err) {
-        setStatus('Something went wrong. Try again.');
+        setStatus('❌ Something went wrong. Try again.');
+      } finally {
+        setVerifying(false);
       }
-
-      setVerifying(false);
     };
 
     verifyEmail();
@@ -47,11 +45,7 @@ function VerifyEmail() {
   return (
     <div className="wrapper">
       <h2>Email Verification</h2>
-      {verifying ? (
-        <p>Verifying...</p>
-      ) : (
-        <p>{status}</p>
-      )}
+      <p style={{ color: verifying ? 'blue' : 'black' }}>{status}</p>
     </div>
   );
 }
