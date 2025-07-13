@@ -1,18 +1,31 @@
-
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { fetchSinglePost } from '../services/postService';
 
 function BlogDetails() {
   const { id } = useParams();
-  const blogs = JSON.parse(localStorage.getItem("blogs")) || [];
-  const blog = blogs.find(b => b.id === parseInt(id));
+  const [blog, setBlog] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const loadPost = async () => {
+      const data = await fetchSinglePost(id);
+      if (!data.error) setBlog(data);
+      setLoading(false);
+    };
+    loadPost();
+  }, [id]);
+
+  if (loading) return <p>Loading blog...</p>;
   if (!blog) return <p>Blog not found</p>;
 
   return (
-    <div>
+    <div className="blog-details">
       <h2>{blog.title}</h2>
-      <p>{blog.content}</p>
+      <img src={blog.image} alt={blog.title} className="image-preview" />
+      <p>{blog.body || blog.content}</p>
     </div>
   );
 }
+
 export default BlogDetails;

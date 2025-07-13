@@ -11,60 +11,72 @@ function CreateBlog() {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result); // This will be the Base64 string
-      };
+      reader.onloadend = () => setImage(reader.result);
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const blogs = JSON.parse(localStorage.getItem("blogs")) || [];
-    const newBlog = { 
-      id: Date.now(), 
-      title, 
-      content,
-      image // This is now a Base64 string
-    };
-    blogs.push(newBlog);
-    localStorage.setItem("blogs", JSON.stringify(blogs));
-    navigate('/home');
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("Please log in first");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/posts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ title, body: content, image }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Failed to create post");
+      } else {
+        navigate('/home');
+      }
+    } catch (error) {
+      console.error("Create error:", error);
+      alert("Network or server error");
+    }
   };
 
   return (
     <div className="page-2">
       <form onSubmit={handleSubmit}>
-        <div className='two'> 
-          <input 
-            placeholder="Title" 
-            value={title} 
-            className='title' 
-            onChange={e => setTitle(e.target.value)} 
-            required 
+        <div className='two'>
+          <input
+            placeholder="Title"
+            value={title}
+            className='title'
+            onChange={(e) => setTitle(e.target.value)}
+            required
           />
-          
-          <input 
-            type='file' 
+
+          <input
+            type='file'
             className='image-upload'
             onChange={handleImageUpload}
-            required 
+            required
           />
-          
+
           {image && (
-            <img 
-              src={image}
-              alt="Preview" 
-              className="image-preview"
-            />
+            <img src={image} alt="Preview" className="image-preview" />
           )}
-          
-          <textarea 
-            placeholder="Type content here" 
-            value={content} 
-            className='content' 
-            onChange={e => setContent(e.target.value)} 
-            required 
+
+          <textarea
+            placeholder="Type content here"
+            value={content}
+            className='content'
+            onChange={(e) => setContent(e.target.value)}
+            required
           />
         </div>
         <button className='submit' type="submit">Add</button>

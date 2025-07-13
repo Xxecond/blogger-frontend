@@ -1,60 +1,61 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { getPostById, updatePost } from '../services/postService';
 
 function EditBlog() {
-  const { id } = useParams(); // Get the blog ID from the URL
-  const navigate = useNavigate(); // Navigate function to redirect the user
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  // Set initial state
   const [title, setTitle] = useState('');
   const [image, setImage] = useState(null);
   const [content, setContent] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get the blogs from localStorage
-    const blogs = JSON.parse(localStorage.getItem("blogs")) || [];
-    const blog = blogs.find(b => b.id === parseInt(id));
+    const fetchBlog = async () => {
+      const data = await getPostById(id);
+      if (!data.error) {
+        setTitle(data.title);
+        setContent(data.body);
+        if (data.image) setImage(data.image);
+      } else {
+        alert(data.error);
+        navigate('/home');
+      }
+      setLoading(false);
+    };
 
-    if (blog) {
-      // Set the form values to the existing blog's data
-      setTitle(blog.title);
-      setImage(blog.image);  // Set the image if it exists
-      setContent(blog.content);
-    }
-  }, [id]);
+    fetchBlog();
+  }, [id, navigate]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result); // Set the new image (Base64 string)
+        setImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const blogs = JSON.parse(localStorage.getItem("blogs")) || [];
-    const updatedBlog = { 
-      id: parseInt(id), 
-      title, 
-      content,
-      image // Updated image if changed
-    };
+    const result = await updatePost(id, {
+      title,
+      body: content,
+      image,
+    });
 
-    const updatedBlogs = blogs.map(blog =>
-      blog.id === parseInt(id) ? updatedBlog : blog
-    );
-
-    // Save the updated blogs back to localStorage
-    localStorage.setItem("blogs", JSON.stringify(updatedBlogs));
-
-    // Navigate back to home page ("/")
-    navigate("/"); // Redirect to the home page
+    if (!result.error) {
+      navigate('/home');
+    } else {
+      alert(result.error);
+    }
   };
+
+  if (loading) return <p>Loading blog...</p>;
 
   return (
     <div className="page-2">
@@ -68,7 +69,6 @@ function EditBlog() {
             required
           />
 
-          {/* Only show file input if there is no image */}
           {!image && (
             <div>
               <input
@@ -80,18 +80,12 @@ function EditBlog() {
             </div>
           )}
 
-          {/* Show the image preview if an image is set */}
           {image && (
             <div className="image-preview-container">
-              <img
-                src={image}
-                alt="Preview"
-                className="image-preview"
-              />
-              {/* Optionally, allow the user to remove the image */}
-              <button 
-                type="button" 
-                onClick={() => setImage(null)} 
+              <img src={image} alt="Preview" className="image-preview" />
+              <button
+                type="button"
+                onClick={() => setImage(null)}
                 className="rm-img-btn"
               >
                 Remove Image
