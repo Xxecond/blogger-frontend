@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchSinglePost } from '../services/postService';
+import { getPostById } from '../services/postService';
 
 function BlogDetails() {
   const { id } = useParams();
@@ -9,7 +9,7 @@ function BlogDetails() {
 
   useEffect(() => {
     const loadPost = async () => {
-      const data = await fetchSinglePost(id);
+      const data = await getPostById(id);
       if (!data.error) setBlog(data);
       setLoading(false);
     };

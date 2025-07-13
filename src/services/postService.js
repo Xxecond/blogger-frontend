@@ -30,7 +30,7 @@ export async function createPost({ title, body, image }) {
   }
 }
 
-// ✅ Get all posts for the logged-in user
+// ✅ Get posts for logged-in user
 export async function fetchUserPosts() {
   try {
     const response = await fetch(`${API_BASE_URL}/api/posts`, {
@@ -51,7 +51,7 @@ export async function fetchUserPosts() {
 }
 
 // ✅ Get a single post by ID
-export async function fetchSinglePost(id) {
+export async function getPostById(id) {
   try {
     const response = await fetch(`${API_BASE_URL}/api/posts/${id}`, {
       method: 'GET',
@@ -65,7 +65,7 @@ export async function fetchSinglePost(id) {
 
     return data;
   } catch (error) {
-    console.error('Fetch single post error:', error.message);
+    console.error('Get post by ID error:', error.message);
     return { error: 'Network error or server not responding' };
   }
 }
