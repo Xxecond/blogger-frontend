@@ -1,9 +1,9 @@
- const API_BASE_URL = import.meta.env.VITE_API_URL;
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-// ✅ Signup
+// ✅ Signup user
 export async function signupUser(email, password) {
   try {
-    const response = await fetch(`${API_BASE_URL}/signup`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -22,10 +22,10 @@ export async function signupUser(email, password) {
   }
 }
 
-// ✅ Login
+// ✅ Login user
 export async function loginUser(email, password) {
   try {
-    const response = await fetch(`${API_BASE_URL}/login`, {
+    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -37,7 +37,8 @@ export async function loginUser(email, password) {
       return { error: data.message || 'Login failed' };
     }
 
-    localStorage.setItem('token', data.token); // Optional
+    // Optional: save token
+    localStorage.setItem('token', data.token);
     return data;
   } catch (error) {
     console.error('Login error:', error.message);

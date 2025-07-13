@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { signupUser, loginUser } from '../services/authService'; // Adjust path if needed
+import { signupUser } from '../services/authService';
 
 function Signup() {
   const [email, setEmail] = useState('');
@@ -21,79 +21,79 @@ function Signup() {
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    const signupData = await signupUser(email, password);
+    const result = await signupUser(email, password);
 
-    if (!signupData.error) {
-      const loginData = await loginUser(email, password);
-
-      if (!loginData.error) {
-        if (rememberMe) {
-          localStorage.setItem('userEmail', email);
-        } else {
-          localStorage.removeItem('userEmail');
-        }
-        navigate('/home');
+    if (!result.error) {
+      if (rememberMe) {
+        localStorage.setItem('userEmail', email);
       } else {
-        setMessage('Signup succeeded but auto-login failed.');
+        localStorage.removeItem('userEmail');
       }
+
+      setMessage('✅ Signup successful! Check your email to verify.');
+      setTimeout(() => navigate('/login?signup=true'), 3000);
     } else {
-      setMessage(signupData.error);
+      setMessage(`❌ ${result.error}`);
     }
   };
 
   return (
-      <div className="auth-page">
-<div className="wrapper">
-      <form onSubmit={handleSignup}>
-        <h2>Create an Account</h2>
+    <div className="auth-page">
+      <div className="wrapper">
+        <form onSubmit={handleSignup}>
+          <h2>Create an Account</h2>
 
-        <div className="input-box">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="input-box password-box">
-          <input
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button
-            type="button"
-            className="toggle-password"
-            onClick={() => setShowPassword((prev) => !prev)}
-          >
-            {showPassword ? '🙈' : '👁️'}
-          </button>
-        </div>
-
-        <div className="remember-forgot">
-          <label>
+          <div className="input-box">
             <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-            />{' '}
-            Remember me
-          </label>
-        </div>
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-        <button type="submit" className="btn">Signup</button>
+          <div className="input-box password-box">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={() => setShowPassword(prev => !prev)}
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
 
-        <div className="register-link">
-          <p>Already have an account?<Link to="/"> Login</Link></p>
-        </div>
+          <div className="remember-forgot">
+            <label>
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              {' '}Remember me
+            </label>
+          </div>
 
-        {message && <p className="error">{message}</p>}
-      </form>
-    </div>
+          <button type="submit" className="btn">Signup</button>
+
+          <div className="register-link">
+            <p>Already have an account? <Link to="/login">Login</Link></p>
+          </div>
+
+          {message && (
+            <p className={message.startsWith('✅') ? 'success' : 'error'}>
+              {message}
+            </p>
+          )}
+        </form>
+      </div>
     </div>
   );
 }

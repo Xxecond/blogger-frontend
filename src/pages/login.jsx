@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginUser } from '../services/authService'; // Make sure this path is correct
+import { loginUser } from '../services/authService';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -31,63 +31,67 @@ function Login() {
       }
       navigate('/home');
     } else {
-      setMessage(data.error);
+      setMessage(`❌ ${data.error}`);
     }
   };
 
   return (
     <div className="auth-page">
-    <div className="wrapper">
-      <form onSubmit={handleLogin}>
-        <h2>Login</h2>
+      <div className="wrapper">
+        <form onSubmit={handleLogin}>
+          <h2>Login</h2>
 
-        <div className="input-box">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="input-box password-box">
-          <input
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button
-            type="button"
-            className="toggle-password"
-            onClick={() => setShowPassword((prev) => !prev)}
-          >
-            {showPassword ? '🙈' : '👁️'}
-          </button>
-        </div>
-
-        <div className="remember-forgot">
-          <label>
+          <div className="input-box">
             <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-            />{' '}
-            Remember me
-          </label>
-          <Link to="/forgot-password">Forgot password?</Link>
-        </div>
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-        <button type="submit" className="btn">Login</button>
+          <div className="input-box password-box">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={() => setShowPassword(prev => !prev)}
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
 
-        <div className="register-link">
-          <p>Don't have an account?<Link to="/signup"> Register</Link></p>
-        </div>
+          <div className="remember-forgot">
+            <label>
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
+              {' '}Remember me
+            </label>
+            <Link to="/forgot-password">Forgot password?</Link>
+          </div>
 
-        {message && <p className="error">{message}</p>}
-      </form>
+          <button type="submit" className="btn">Login</button>
+
+          <div className="register-link">
+            <p>Don't have an account? <Link to="/signup">Register</Link></p>
+          </div>
+
+          {message && (
+            <p className={message.startsWith('❌') ? 'error' : 'success'}>
+              {message}
+            </p>
+          )}
+        </form>
       </div>
     </div>
   );
