@@ -27,7 +27,7 @@ function CreateBlog() {
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/posts`, {
-        method: 'POST',
+        method: "POST",
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -36,14 +36,13 @@ function CreateBlog() {
       });
 
       const data = await response.json();
-
       if (!response.ok) {
-        alert(data.error || "Failed to create post");
+        alert(data.message || "Failed to create post");
       } else {
-        navigate('/home');
+        navigate('/home', { state: { newPost: true } }); // ✅ key update
       }
-    } catch (error) {
-      console.error("Create error:", error);
+    } catch (err) {
+      console.error("Create error:", err);
       alert("Network or server error");
     }
   };
@@ -51,35 +50,30 @@ function CreateBlog() {
   return (
     <div className="page-2">
       <form onSubmit={handleSubmit}>
-        <div className='two'>
+        <div className="two">
           <input
             placeholder="Title"
             value={title}
-            className='title'
-            onChange={(e) => setTitle(e.target.value)}
+            className="title"
+            onChange={e => setTitle(e.target.value)}
             required
           />
-
           <input
-            type='file'
-            className='image-upload'
+            type="file"
+            className="image-upload"
             onChange={handleImageUpload}
             required
           />
-
-          {image && (
-            <img src={image} alt="Preview" className="image-preview" />
-          )}
-
+          {image && <img src={image} alt="Preview" className="image-preview" />}
           <textarea
             placeholder="Type content here"
             value={content}
-            className='content'
-            onChange={(e) => setContent(e.target.value)}
+            className="content"
+            onChange={e => setContent(e.target.value)}
             required
           />
         </div>
-        <button className='submit' type="submit">Add</button>
+        <button className="submit" type="submit">Add</button>
       </form>
     </div>
   );

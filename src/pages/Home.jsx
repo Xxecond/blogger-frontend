@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import { fetchUserPosts, deletePost } from '../services/postService';
 import SearchBar from '../components/SearchBar';
 import BlogCard from '../components/BlogCard';
-import { Link } from 'react-router-dom';
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const loadPosts = async () => {
       const data = await fetchUserPosts();
       if (!data.error) {
-        setBlogs(data);
+        // ✅ Sort by newest first using createdAt timestamp
+        const sorted = [...data].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setBlogs(sorted);
       } else {
         console.error(data.error);
       }
@@ -21,7 +24,7 @@ function Home() {
     };
 
     loadPosts();
-  }, []);
+  }, [location.state?.newPost]); // ✅ Refresh when a new post is added
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this blog?')) {
